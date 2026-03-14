@@ -1,7 +1,7 @@
-import { useState } from "react";
-import VideoUploader from "./components/VideoUploader";
-import VideoCanvasPlayer from "./components/VideoCanvasPlayer";
-import "./App.css";
+import { useState } from 'react';
+import VideoUploader from './components/VideoUploader';
+import VideoCanvasPlayer from './components/VideoCanvasPlayer';
+import './App.css';
 
 function App() {
   const [file, setFile] = useState<File | null>(null);
