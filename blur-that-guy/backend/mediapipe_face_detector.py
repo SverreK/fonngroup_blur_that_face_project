@@ -89,6 +89,8 @@ def detectFacesInVideo(video_path):
         cap.release()
         print(f"Done! Total frames processed: {frame_index}")
         print(f"Frames with faces: {sum(1 for f in result if f['faces'])}")
-        return result
+        
+        return {"result": result,
+                "fps": fps}
 
 
