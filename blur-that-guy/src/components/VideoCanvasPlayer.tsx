@@ -1,23 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-
-type Face = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-type FrameData = {
-  frame: number;
-  faces: Face[];
-};
+import type { FrameData } from '../types/types';
 
 type Props = {
   preview: string;
   faceData: FrameData[] | null;
+  fps: number;
 };
 
-export default function VideoCanvasPlayer({ preview, faceData }: Props) {
+export default function VideoCanvasPlayer({ preview, faceData, fps }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -32,7 +22,6 @@ export default function VideoCanvasPlayer({ preview, faceData }: Props) {
     if (!ctx) return;
 
     video.addEventListener('timeupdate', () => {
-      const fps = 30;
       const currentFrame = Math.floor(video.currentTime * fps);
       const frameData = faceData?.find((f) => f.frame === currentFrame);
 

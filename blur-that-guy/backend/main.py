@@ -26,8 +26,8 @@ async def upload_video(file: UploadFile):
     try:
         result = detectFacesInVideo(temp_file_path)
         return {"message": "Video uploaded and processed successfully",
-                "result": result.result,
-                "fps": result.fps}
+                "result": result["result"],
+                "fps": result["fps"]}
     except Exception as e:
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))

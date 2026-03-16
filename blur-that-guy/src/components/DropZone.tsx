@@ -2,8 +2,13 @@ import axios from 'axios';
 import React, { useCallback } from 'react';
 import { useDropzone, type FileWithPath } from 'react-dropzone';
 
-export default function DropZone() {
+type Props = {
+  onUpload: (data: FrameData[], url: string, fps: number) => void;
+};
+
+export default function DropZone({ onUpload }: Props) {
   const [files, setFiles] = React.useState<FileWithPath[]>([]);
+  const [url, setUrl] = React.useState<string>('');
 
   const handleUpload = () => {
     if (files.length === 0) return;
@@ -17,6 +22,7 @@ export default function DropZone() {
     axios
       .post('http://localhost:8000/upload-video', formData)
       .then((response) => {
+        onUpload(response.data.result, url, response.data.fps);
         console.log(response.data);
       })
       .catch((error) => {
@@ -27,8 +33,8 @@ export default function DropZone() {
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     setFiles(acceptedFiles);
 
-    const url = URL.createObjectURL(acceptedFiles[0]);
-    setPreview(url);
+    const newUrl = URL.createObjectURL(acceptedFiles[0]);
+    setUrl(newUrl);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -47,14 +53,6 @@ export default function DropZone() {
           <p>Slipp videoen her...</p>
         ) : (
           <p>Drag and drop your video here, or click to select</p>
-        )}
-
-        {preview && (
-          <video
-            src={preview}
-            controls
-            className="mt-4 w-full max-h-96 object-contain"
-          />
         )}
       </div>
 
