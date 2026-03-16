@@ -1,9 +1,12 @@
-//import { useState } from 'react';
+import { useState } from 'react';
 //import VideoUploader from '../components/VideoUploader';
 import DropZone from '../components/DropZone';
 import Header from '../components/Header';
 
 export default function HomePage() {
+  const [faceData, setFaceData] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
   return (
     <>
       <header>

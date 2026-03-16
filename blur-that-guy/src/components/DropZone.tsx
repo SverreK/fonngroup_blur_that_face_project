@@ -4,7 +4,6 @@ import { useDropzone, type FileWithPath } from 'react-dropzone';
 
 export default function DropZone() {
   const [files, setFiles] = React.useState<FileWithPath[]>([]);
-  const [preview, setPreview] = React.useState<string | null>(null);
 
   const handleUpload = () => {
     if (files.length === 0) return;

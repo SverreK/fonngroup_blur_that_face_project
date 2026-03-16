@@ -1,28 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
-type Props = {
-  file: File | null;
+type Face = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
-export default function VideoCanvasPlayer({ file }: Props) {
-  const [videoURL, setVideoURL] = useState<string | null>(null);
+type FrameData = {
+  frame: number;
+  faces: Face[];
+};
+
+type Props = {
+  preview: string;
+  faceData: FrameData[] | null;
+};
+
+export default function VideoCanvasPlayer({ preview, faceData }: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!file) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
 
-    const url = URL.createObjectURL(file);
-    setVideoURL(url);
+    if (!video || !canvas) return;
 
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [file]);
+    const ctx = canvas.getContext('2d');
 
-  if (!videoURL) return null;
+    if (!ctx) return;
+
+    video.addEventListener('timeupdate', () => {
+      const fps = 30;
+      const currentFrame = Math.floor(video.currentTime * fps);
+      const frameData = faceData?.find((f) => f.frame === currentFrame);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      frameData?.faces.forEach((face) => {
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(face.x, face.y, face.width, face.height);
+      });
+    });
+  }, [faceData]);
 
   return (
-    <div>
-      <video src={videoURL} controls width={400}></video>
+    <div style={{ position: 'relative' }}>
+      <video ref={videoRef} src={preview} controls width="600" />
+      <canvas
+        ref={canvasRef}
+        width="600"
+        height="400"
+        style={{ position: 'absolute', top: 0, left: 0 }}
+      />
     </div>
   );
 }
